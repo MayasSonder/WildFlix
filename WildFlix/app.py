@@ -186,9 +186,28 @@ elif st.session_state.page == "app" and st.session_state.get("authentication_sta
                     st.caption(titre)
 
     elif page == "🔍 Explorer":
-        st.title("🔍 Explorer par genre")
-        genre = st.selectbox("Choisis un genre", df["Genre_1"].dropna().unique().tolist())
-        st.dataframe(df[df["Genre_1"] == genre][["Title", "Genre_1", "imdbRating"]])
+        st.title("🔍 Explorer")
+        genre = st.selectbox("Filtrer par genre", ["Tous"] + sorted(df["Genre_1"].dropna().unique().tolist()))
+        
+        if genre == "Tous":
+            films_filtres = df.dropna(subset=["Poster"]).sort_values("Released_year", ascending=False)
+        else:
+            films_filtres = df[df["Genre_1"] == genre].dropna(subset=["Poster"]).sort_values("Released_year", ascending=False)
+
+        cols = st.columns(4)
+        for i, (_, film) in enumerate(films_filtres.iterrows()):
+            with cols[i % 4]:
+                st.markdown(f"""
+                <div style="position:relative; margin-bottom:15px;">
+                    <img src="{film['Poster']}" style="width:100%; border-radius:8px;">
+                    <div style="position:absolute; bottom:8px; left:8px; background:#27ae60; color:white; 
+                                font-weight:bold; padding:3px 8px; border-radius:5px; font-size:14px;">
+                        {film['imdbRating']}
+                    </div>
+                </div>
+                <p style="margin:0; font-size:13px; color:white;">{film['Title']}</p>
+                <p style="margin:0; font-size:11px; color:gray;">{film['Genre_1']}</p>
+                """, unsafe_allow_html=True)
 
     elif page == "👤 Mon compte":
         st.title(f"Bienvenue {st.session_state['name']} ! 👋")
@@ -196,3 +215,4 @@ elif st.session_state.page == "app" and st.session_state.get("authentication_sta
         if not st.session_state.get("authentication_status"):
             st.session_state.page = "accueil"
             st.rerun()
+            
