@@ -11,6 +11,10 @@ if "go" in st.query_params and st.query_params["go"] == "login":
     st.query_params.clear()
     st.rerun()
 
+# Si cookie actif, on redirige vers app
+if st.session_state.get("authentication_status") and st.session_state.get("page") == "accueil":
+    st.session_state.page = "app"
+
 st.set_page_config(layout="wide")
 
 st.markdown("""
