@@ -188,7 +188,7 @@ elif st.session_state.page == "app" and st.session_state.get("authentication_sta
     elif page == "🔍 Explorer":
         st.title("🔍 Explorer")
         genre = st.selectbox("Filtrer par genre", ["Tous"] + sorted(df["Genre_1"].dropna().unique().tolist()))
-        
+
         if genre == "Tous":
             films_filtres = df.dropna(subset=["Poster"]).sort_values("Released_year", ascending=False)
         else:
@@ -215,4 +215,3 @@ elif st.session_state.page == "app" and st.session_state.get("authentication_sta
         if not st.session_state.get("authentication_status"):
             st.session_state.page = "accueil"
             st.rerun()
-            
