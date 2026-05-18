@@ -6,11 +6,13 @@ from sklearn.metrics.pairwise import cosine_similarity
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 df = pd.read_csv(os.path.join(BASE_DIR, "films_clean2.csv"))
 
-df[["Genre_1", "Genre_2", "Genre_3", "Actors_1", "Actors_2", "Actors_3", "Plot"]] = df[["Genre_1", "Genre_2", "Genre_3", "Actors_1", "Actors_2", "Actors_3", "Plot"]].fillna("")
+df[["Genre_1", "Genre_2", "Genre_3", "Actors_1", "Actors_2", "Actors_3", "plot_clean", "imdbRating", "imdbVotes"]] = df[["Genre_1", "Genre_2", "Genre_3", "Actors_1", "Actors_2", "Actors_3", "plot_clean", "imdbRating", "imdbVotes"]].fillna("")
 
 df["soup"] = (df["Genre_1"] + " " + df["Genre_2"] + " " + df["Genre_3"] + " "
             + df["Actors_1"] + " " + df["Actors_2"] + " " + df["Actors_3"] + " "
-            + df["Plot"])
+            + df["plot_clean"] + " "
+            + df["imdbRating"].astype(str) + " "
+            + df["imdbVotes"].astype(str))
 
 tfidf = TfidfVectorizer()
 tfidf_matrix = tfidf.fit_transform(df["soup"])
